@@ -1,0 +1,65 @@
+---
+layout: layouts/base.njk
+---
+{% import "components/ui.njk" as ui %}
+
+<div class="min-h-screen bg-gradient-subtle">
+  <div class="absolute inset-0 overflow-hidden pointer-events-none">
+    <div class="absolute left-10 top-20 h-32 w-32 rounded-full bg-brand-teal-500/5 blur-3xl animate-pulse"></div>
+    <div class="absolute bottom-20 right-10 h-40 w-40 rounded-full bg-brand-mint-200/20 blur-3xl animate-pulse delay-1000"></div>
+    <div class="absolute left-1/4 top-1/2 h-24 w-24 rounded-full bg-brand-olive-500/5 blur-2xl animate-pulse delay-500"></div>
+  </div>
+
+  <section class="relative pt-28 sm:pt-32">
+    <div class="container mx-auto px-4 sm:px-6">
+      <div class="mx-auto mb-10 max-w-4xl text-center sm:mb-16">
+        <div class="mb-6 flex justify-center">
+          <div class="rounded-full bg-gradient-to-br from-brand-teal-500 to-brand-ink-800 p-4 shadow-soft">
+            {{ ui.icon(hero_icon, "h-12 w-12 text-white") }}
+          </div>
+        </div>
+        <h1 class="mb-4 font-heading text-4xl font-bold text-brand-ink-900 sm:text-5xl lg:text-6xl">{{ hero_title }}</h1>
+        <p class="font-body text-lg leading-relaxed text-brand-ink-700 sm:text-xl">{{ hero_subtitle }}</p>
+
+        <div class="mx-auto mt-8 max-w-xl rounded-full border border-brand-teal-500/10 bg-white/80 px-5 py-3 shadow-soft">
+          <input type="text" value="" placeholder="{{ search_placeholder }}" class="w-full bg-transparent font-body text-sm text-brand-ink-700 outline-none placeholder:text-brand-ink-700/50" />
+        </div>
+      </div>
+
+      <div class="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
+        {% for post in posts %}
+          <article class="overflow-hidden rounded-3xl border border-brand-teal-500/10 bg-white shadow-card transition-smooth hover:-translate-y-1 hover:shadow-cta">
+            <img src="{{ post.image }}" alt="{{ post.title }}" class="h-60 w-full object-cover" />
+            <div class="p-6">
+              <div class="mb-4 flex flex-wrap items-center gap-3 text-xs text-brand-ink-700/75">
+                <span class="rounded-full bg-brand-mint-200/40 px-3 py-1 font-semibold text-brand-ink-800">{{ post.tag }}</span>
+                <span>{{ post.date }}</span>
+                <span>{{ post.readTime }}</span>
+              </div>
+              <h2 class="mb-4 font-heading text-2xl font-bold text-brand-ink-900">{{ post.title }}</h2>
+              <p class="mb-5 font-body text-base leading-relaxed text-brand-ink-700">{{ post.excerpt }}</p>
+              <p class="font-body text-sm font-semibold text-brand-teal-600">{{ post.author }}</p>
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+
+      <div class="mt-12 flex items-center justify-center gap-3 font-body text-sm text-brand-ink-700">
+        <span class="rounded-full border border-brand-teal-500/10 bg-white px-4 py-2 shadow-soft">Anterior</span>
+        <span class="rounded-full bg-brand-teal-500 px-4 py-2 font-semibold text-white shadow-soft">1</span>
+        <span class="rounded-full border border-brand-teal-500/10 bg-white px-4 py-2 shadow-soft">2</span>
+        <span class="rounded-full border border-brand-teal-500/10 bg-white px-4 py-2 shadow-soft">Siguiente</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="relative py-16 sm:py-20">
+    <div class="container mx-auto px-4 sm:px-6">
+      <div class="overflow-hidden rounded-[2rem] bg-gradient-to-br from-brand-ink-900 via-brand-teal-700 to-brand-ink-800 p-10 text-center shadow-cta sm:p-14">
+        <h2 class="mb-5 font-heading text-3xl font-bold text-white sm:text-4xl">{{ cta.title }}</h2>
+        <p class="mx-auto mb-8 max-w-3xl font-body text-lg leading-relaxed text-white/85">{{ cta.text }}</p>
+        {{ ui.button(cta.href, cta.label, "ghost", cta.external) }}
+      </div>
+    </div>
+  </section>
+</div>
