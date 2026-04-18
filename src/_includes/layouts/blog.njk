@@ -11,53 +11,97 @@ layout: layouts/base.njk
   </div>
 
   <section class="relative pt-28 sm:pt-32">
-    <div class="container mx-auto px-4 sm:px-6">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
       <div class="mx-auto mb-10 max-w-4xl text-center sm:mb-16">
-        <div class="mb-6 flex justify-center">
-          <div class="rounded-full bg-gradient-to-br from-brand-teal-500 to-brand-ink-800 p-4 shadow-soft">
-            {{ ui.icon(hero_icon, "h-12 w-12 text-white") }}
+        <div class="mb-4 flex justify-center sm:mb-6">
+          <div class="rounded-full bg-gradient-to-br from-brand-teal-500 to-brand-ink-800 p-3 shadow-soft sm:p-4">
+            {{ ui.icon(hero_icon, "h-10 w-10 text-white sm:h-12 sm:w-12") }}
           </div>
         </div>
-        <h1 class="mb-4 font-heading text-4xl font-bold text-brand-ink-900 sm:text-5xl lg:text-6xl">{{ hero_title }}</h1>
-        <p class="font-body text-lg leading-relaxed text-brand-ink-700 sm:text-xl">{{ hero_subtitle }}</p>
+        <h1 class="mb-3 font-heading text-3xl font-bold leading-heading-1 text-brand-ink-900 sm:mb-4 sm:text-4xl md:text-5xl lg:text-6xl">{{ hero_title }}</h1>
+        <p class="mb-6 font-body text-sm leading-body text-brand-olive-500 sm:mb-8 sm:text-base md:text-lg">{{ hero_subtitle }}</p>
 
-        <div class="mx-auto mt-8 max-w-xl rounded-full border border-brand-teal-500/10 bg-white/80 px-5 py-3 shadow-soft">
-          <input type="text" value="" placeholder="{{ search_placeholder }}" class="w-full bg-transparent font-body text-sm text-brand-ink-700 outline-none placeholder:text-brand-ink-700/50" />
+        <div class="mx-auto max-w-md">
+          <label class="relative block">
+            {{ ui.icon("search", "absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-brand-olive-500/50") }}
+            <input
+              type="text"
+              value=""
+              placeholder="{{ search_placeholder }}"
+              class="w-full rounded-xl border border-brand-mint-200/40 bg-white py-3 pl-12 pr-4 font-body text-sm shadow-soft outline-none transition-smooth placeholder:text-brand-olive-500/45 focus:border-transparent focus:ring-2 focus:ring-brand-teal-500 sm:py-4 sm:text-base"
+              data-blog-search-input
+            />
+          </label>
         </div>
       </div>
 
-      <div class="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
-        {% for post in posts %}
-          <article class="overflow-hidden rounded-3xl border border-brand-teal-500/10 bg-white shadow-card transition-smooth hover:-translate-y-1 hover:shadow-cta">
-            <img src="{{ post.image }}" alt="{{ post.title }}" class="h-60 w-full object-cover" />
-            <div class="p-6">
-              <div class="mb-4 flex flex-wrap items-center gap-3 text-xs text-brand-ink-700/75">
-                <span class="rounded-full bg-brand-mint-200/40 px-3 py-1 font-semibold text-brand-ink-800">{{ post.tag }}</span>
-                <span>{{ post.date }}</span>
-                <span>{{ post.readTime }}</span>
+      <div class="mx-auto grid max-w-7xl grid-cols-1 gap-6 sm:gap-8 md:grid-cols-2 lg:grid-cols-3" data-blog-grid>
+        {% for entry in collections.blogPosts %}
+          {% set post = entry.data %}
+          {% if post.theme == "mint" %}
+            {% set card_border = "border-brand-mint-200/40" %}
+            {% set card_bg = "bg-brand-mint-200/20" %}
+            {% set badge_bg = "bg-brand-mint-200/60" %}
+            {% set badge_text = "text-brand-ink-800" %}
+          {% elif post.theme == "olive" %}
+            {% set card_border = "border-brand-olive-500/30" %}
+            {% set card_bg = "bg-brand-olive-500/10" %}
+            {% set badge_bg = "bg-brand-olive-500/20" %}
+            {% set badge_text = "text-brand-olive-500" %}
+          {% else %}
+            {% set card_border = "border-brand-teal-500/30" %}
+            {% set card_bg = "bg-brand-teal-500/10" %}
+            {% set badge_bg = "bg-brand-teal-500/20" %}
+            {% set badge_text = "text-brand-teal-500" %}
+          {% endif %}
+          <article class="group flex h-full flex-col overflow-hidden rounded-lg border {{ card_border }} {{ card_bg }} shadow-sm transition-smooth hover:scale-105 hover:shadow-card" data-blog-card data-search-content="{{ (post.title ~ ' ' ~ post.tag ~ ' ' ~ post.author ~ ' ' ~ post.excerpt) | lower }}">
+            <a href="{{ entry.url }}" class="relative overflow-hidden">
+              <img src="{{ post.image }}" alt="{{ post.title }}" class="h-48 w-full object-cover transition-smooth group-hover:scale-110 sm:h-56" loading="lazy" />
+              <div class="absolute right-3 top-3">
+                <span class="inline-flex items-center rounded-full {{ badge_bg }} {{ badge_text }} px-2.5 py-0.5 text-xs font-semibold shadow-soft">
+                  {{ post.tag }}
+                </span>
               </div>
-              <h2 class="mb-4 font-heading text-2xl font-bold text-brand-ink-900">{{ post.title }}</h2>
-              <p class="mb-5 font-body text-base leading-relaxed text-brand-ink-700">{{ post.excerpt }}</p>
-              <p class="font-body text-sm font-semibold text-brand-teal-600">{{ post.author }}</p>
+            </a>
+            <div class="flex flex-1 flex-col p-5 sm:p-6">
+              <div class="mb-3 flex flex-wrap items-center gap-3 text-xs text-brand-olive-500 sm:mb-4 sm:gap-4 sm:text-sm">
+                <div class="flex items-center gap-1.5">
+                  {{ ui.icon("calendar", "h-3.5 w-3.5 sm:h-4 sm:w-4") }}
+                  <time datetime="{{ post.date | isoDate }}" class="font-body">{{ post.date | readableDateEs }}</time>
+                </div>
+                <div class="flex items-center gap-1.5">
+                  {{ ui.icon("user", "h-3.5 w-3.5 sm:h-4 sm:w-4") }}
+                  <span class="font-body">{{ post.author }}</span>
+                </div>
+                <div class="flex items-center gap-1.5">
+                  {{ ui.icon("book-open", "h-3.5 w-3.5 sm:h-4 sm:w-4") }}
+                  <span class="font-body">{{ post.readTime }}</span>
+                </div>
+              </div>
+              <h2 class="mb-2 font-heading text-lg font-bold leading-heading-3 text-brand-ink-900 transition-smooth group-hover:text-brand-teal-500 sm:mb-3 sm:text-xl">
+                <a href="{{ entry.url }}">{{ post.title }}</a>
+              </h2>
+              <p class="mb-4 flex-1 font-body text-sm leading-relaxed text-brand-ink-800 sm:mb-6 sm:text-base">{{ post.excerpt }}</p>
+              <a href="{{ entry.url }}" class="group/btn inline-flex items-center justify-between gap-2 font-body text-sm font-semibold text-brand-teal-500 transition-smooth hover:bg-brand-teal-500/10 hover:text-brand-ink-800 sm:text-base">
+                <span>Leer más</span>
+                {{ ui.icon("arrow-right", "h-4 w-4 transition-smooth group-hover/btn:translate-x-1") }}
+              </a>
             </div>
           </article>
         {% endfor %}
       </div>
 
-      <div class="mt-12 flex items-center justify-center gap-3 font-body text-sm text-brand-ink-700">
-        <span class="rounded-full border border-brand-teal-500/10 bg-white px-4 py-2 shadow-soft">Anterior</span>
-        <span class="rounded-full bg-brand-teal-500 px-4 py-2 font-semibold text-white shadow-soft">1</span>
-        <span class="rounded-full border border-brand-teal-500/10 bg-white px-4 py-2 shadow-soft">2</span>
-        <span class="rounded-full border border-brand-teal-500/10 bg-white px-4 py-2 shadow-soft">Siguiente</span>
-      </div>
+      <p class="hidden pt-10 text-center font-body text-sm text-brand-olive-500 sm:text-base" data-blog-empty>
+        No encontramos artículos que coincidan con tu búsqueda.
+      </p>
     </div>
   </section>
 
   <section class="relative py-16 sm:py-20">
-    <div class="container mx-auto px-4 sm:px-6">
-      <div class="overflow-hidden rounded-[2rem] bg-gradient-to-br from-brand-ink-900 via-brand-teal-700 to-brand-ink-800 p-10 text-center shadow-cta sm:p-14">
-        <h2 class="mb-5 font-heading text-3xl font-bold text-white sm:text-4xl">{{ cta.title }}</h2>
-        <p class="mx-auto mb-8 max-w-3xl font-body text-lg leading-relaxed text-white/85">{{ cta.text }}</p>
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="mx-auto max-w-4xl rounded-2xl border border-brand-mint-200/40 bg-gradient-to-br from-brand-teal-500/10 via-brand-mint-200/20 to-brand-olive-500/10 p-8 text-center shadow-card sm:p-12">
+        <h2 class="mb-3 font-heading text-2xl font-bold leading-heading-2 text-brand-ink-900 sm:mb-4 sm:text-3xl md:text-4xl">{{ cta.title }}</h2>
+        <p class="mx-auto mb-6 max-w-3xl font-body text-sm leading-body text-brand-olive-500 sm:mb-8 sm:text-base md:text-lg">{{ cta.text }}</p>
         {{ ui.button(cta.href, cta.label, "ghost", cta.external) }}
       </div>
     </div>

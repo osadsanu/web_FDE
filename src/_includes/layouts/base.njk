@@ -29,17 +29,19 @@
             {% for item in site.nav %}
               {% set isCurrent = (page.url | isCurrentPath(item.href)) or (item.label == "Aprende" and page.url.startsWith("/aprende/")) %}
               {% if item.submenu %}
-                <div class="group relative">
-                  <button
-                    type="button"
+                <div class="desktop-submenu relative" data-desktop-submenu>
+                  <a
+                    href="{{ item.href }}"
                     class="relative flex items-center gap-1 rounded-lg px-3 py-2 font-body text-sm font-medium transition-smooth xl:px-4 {% if isCurrent %}text-brand-teal-500{% else %}text-brand-ink-800 hover:text-brand-teal-500{% endif %}"
                     aria-haspopup="true"
+                    aria-expanded="false"
+                    data-desktop-submenu-toggle
                   >
                     {{ item.label }}
-                    {{ ui.icon("chevron-down", "h-4 w-4 transition-transform duration-300 group-hover:rotate-180") }}
-                    <span class="absolute bottom-0 left-0 h-0.5 w-full origin-left bg-gradient-to-r from-brand-teal-500 to-brand-mint-200 transition-smooth {% if isCurrent %}scale-x-100{% else %}scale-x-0 group-hover:scale-x-100{% endif %}"></span>
-                  </button>
-                  <div class="pointer-events-none invisible absolute left-0 top-full mt-2 min-w-[260px] rounded-2xl border border-brand-teal-500/10 bg-white/95 p-3 opacity-0 shadow-card transition-all duration-300 group-hover:pointer-events-auto group-hover:visible group-hover:opacity-100">
+                    {{ ui.icon("chevron-down", "h-4 w-4 transition-transform duration-300") }}
+                    <span class="absolute bottom-0 left-0 h-0.5 w-full origin-left bg-gradient-to-r from-brand-teal-500 to-brand-mint-200 transition-smooth {% if isCurrent %}scale-x-100{% else %}scale-x-0{% endif %}"></span>
+                  </a>
+                  <div class="desktop-submenu-panel absolute left-0 top-full z-[60] mt-2 min-w-[260px] rounded-2xl border border-brand-teal-500/10 bg-white/95 p-3 shadow-card" data-desktop-submenu-panel>
                     {% for subitem in item.submenu %}
                       <a href="{{ subitem.href }}" class="block rounded-xl px-4 py-3 font-body text-sm text-brand-ink-700 transition-smooth hover:bg-brand-mint-200/30 hover:text-brand-teal-500">
                         {{ subitem.label }}

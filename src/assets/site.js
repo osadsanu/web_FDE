@@ -16,6 +16,37 @@ if (mobileToggle && mobileNav) {
   });
 }
 
+document.querySelectorAll("[data-desktop-submenu]").forEach((submenu) => {
+  const toggle = submenu.querySelector("[data-desktop-submenu-toggle]");
+
+  if (!toggle) {
+    return;
+  }
+
+  const openMenu = () => {
+    if (!window.matchMedia("(min-width: 1024px)").matches) {
+      return;
+    }
+
+    submenu.classList.add("is-open");
+    toggle.setAttribute("aria-expanded", "true");
+  };
+
+  const closeMenu = () => {
+    submenu.classList.remove("is-open");
+    toggle.setAttribute("aria-expanded", "false");
+  };
+
+  submenu.addEventListener("mouseenter", openMenu);
+  submenu.addEventListener("mouseleave", closeMenu);
+  submenu.addEventListener("focusin", openMenu);
+  submenu.addEventListener("focusout", (event) => {
+    if (!submenu.contains(event.relatedTarget)) {
+      closeMenu();
+    }
+  });
+});
+
 document.querySelectorAll("[data-mobile-submenu]").forEach((submenu) => {
   const button = submenu.querySelector("[data-mobile-submenu-toggle]");
   const panel = submenu.querySelector("[data-mobile-submenu-panel]");
@@ -109,4 +140,34 @@ if (allyScroll && !window.matchMedia("(prefers-reduced-motion: reduce)").matches
       allyScroll.scrollLeft = 0;
     }
   }, 20);
+}
+
+const blogSearchInput = document.querySelector("[data-blog-search-input]");
+
+if (blogSearchInput) {
+  const cards = Array.from(document.querySelectorAll("[data-blog-card]"));
+  const emptyState = document.querySelector("[data-blog-empty]");
+
+  const filterCards = () => {
+    const query = blogSearchInput.value.trim().toLowerCase();
+    let visibleCards = 0;
+
+    cards.forEach((card) => {
+      const haystack = card.dataset.searchContent || "";
+      const matches = !query || haystack.includes(query);
+
+      card.classList.toggle("hidden", !matches);
+
+      if (matches) {
+        visibleCards += 1;
+      }
+    });
+
+    if (emptyState) {
+      emptyState.classList.toggle("hidden", visibleCards !== 0);
+    }
+  };
+
+  blogSearchInput.addEventListener("input", filterCards);
+  filterCards();
 }

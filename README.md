@@ -20,7 +20,8 @@ The generated site is written to `_site/`.
 ## Where to edit content
 
 - Home: `src/index.md`
-- Blog: `src/blog.md`
+- Blog index: `src/blog/index.md`
+- Blog posts: `src/blog/*.md`
 - Oferta educativa: `src/oferta-educativa.md`
 - Transparencia: `src/transparencia.md`
 - Voluntarios: `src/voluntarios.md`
